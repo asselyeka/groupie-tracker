@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var art []Artists
@@ -39,27 +40,12 @@ func ParseArtists(url string) {
 	}
 
 	json.Unmarshal(ourStr, &art)
-
-	fmt.Println("Artists")
 }
-
-// locations := "https://groupietrackers.herokuapp.com/api/locations"
-// dates := "https://groupietrackers.herokuapp.com/api/dates"
-// relation :=	"https://groupietrackers.herokuapp.com/api/relation" (
-
-var artists = "https://groupietrackers.herokuapp.com/api/artists"
 
 func mainPage(w http.ResponseWriter, r *http.Request) {
 
-	body := r.FormValue("body")
-
-	//font := r.FormValue("fonts")
-
+	body := r.FormValue("name")
 	data := SearchArtist(body)
-
-	for i := range data {
-		fmt.Println(data[i].CreationDate)
-	}
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -81,27 +67,47 @@ func SearchArtist(name string) []Artists {
 	var search_artist []Artists
 
 	for i, artist := range art {
-		if name[0] == artist.Name[0] {
-			lenght_name := 0
-			for _, l := range []byte(name) {
-				if l == art[i].Name[lenght_name] {
-					lenght_name++
-				} else {
+		lower_band_name := strings.ToLower(artist.Name)
+		for i_name, l_name := range []byte(lower_band_name) {
+			lower_search_name := strings.ToLower(name)
+			if lower_search_name[0] == l_name {
+				lenght_name := 0
+				indx := i_name
+				for _, l := range []byte(lower_search_name) {
+					if l == lower_band_name[indx] {
+						if indx+1 == len(lower_band_name) {
+							break
+						}
+						indx++
+						lenght_name++
+					} else {
+						break
+					}
+				}
+				if len(name) == lenght_name {
+					search_artist = append(search_artist, art[i])
 					break
 				}
 			}
-			if len(name) == lenght_name {
-				search_artist = append(search_artist, art[i])
-			}
 		}
+
 	}
 	return search_artist
 }
 
 func main() {
 
+	// locations := "https://groupietrackers.herokuapp.com/api/locations"
+	// dates := "https://groupietrackers.herokuapp.com/api/dates"
+	// relation :=	"https://groupietrackers.herokuapp.com/api/relation" (
+
+	var artists = "https://groupietrackers.herokuapp.com/api/artists"
+
 	ParseArtists(artists)
-	println(art[0].Name)
+
+	// static folder
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", mainPage)
 

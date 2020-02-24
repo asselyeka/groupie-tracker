@@ -6,89 +6,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <title>Groupie tracker</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/style.css">
+
 </head>
 
 <body>
 
-    <header class="alert alert-success">
-        <h1>Groupie tracker</h1>
-    </header>
-
-    <div class="search-form">
-        <div>
-            <input name="body" id="search" class="textarea" />
-        </div>
-    </div>
-    <form action="" class="asciiForm" method="GET">
-        <div class="container">
-            <div class="row cards"></div>
-        </div>
-        </div>
-    </form>
-
-
-    <!--search type section-->
     <section>
-        <form class="form-horizontal" action="/" method="POST">
-            <label>Search by:</label>
-            <select class="browser-default custom-select" name="search">
-            <option value="standard" selected>Artist</option>
-            <option value="shadow">Member</option>
-            <option value="thinkertoy">Concert location</option>
-            <option value="thinkertoy">Concert date</option>
-          </select>
-        </form>
-    </section>
 
+        <div class="search" style="padding-block: 15px;" id="search">
 
-    <!--card section-->
+            <form class="form-inline" action="/" method="POST">
+                <input type="text" name="name" placeholder="type title of band">
+                <input type="text" name="member" placeholder="type member's name">
+                <input type="text" name="location" placeholder="type location">
+                <input type="date" name="date" placeholder="type concert date">
+                <button type="submit" hidden="true"></button>
+            </form>
 
-    <section>
-        <div class="card-group">
+        </div>
+        <div id="cards" class="row">
             {{range .}}
-            <div class="card" style="max-width: 18rem;">
-                <img src={{.Image}} class="card-img-top" alt={{.Name}}>
-                <div class="card-body">
-                    <h5 class="card-title alert alert-success">{{.Name}}</h5>
-                    <p class="card-text">Members:</p>
-                    <ul>
-                        {{range .Members}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
-                    <p class="card-text">Creation Date:</p>
-                    <p class="card-text">{{.CreationDate}}</p>
-                    <p class="card-text">First Album:</p>
-                    <p class="card-text">{{.FirstAlbum}}</p>
-                    <a href=#okno class="btn btn-primary">Concert Schedule</a>
+            <div class="col">
+                <div class="card h-100" style="width: 250px;">
+                    <img src={{.Image}} class="card-img-top" alt={{.Name}}>
+                    <div class="card-body">
+                        <h5 class="card-title">{{.Name}}</h5>
+                        <div>
+                            <a href="#" class="btn btn-primary">Concert Schedule</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             {{end}}
         </div>
+
     </section>
-
-    <section>
-        <div id="okno">
-            <h1>Concert Schedule</h1>
-            <a href="#" class="close">Закрыть окно</a>
-        </div>
-    </section>
-
-    <footer>
-    </footer>
-
-    <script>
-        elem = document.getElementById("search");
-        elem.addEventListener("input", function(e) {
-            console.log(e.target.value);
-        })
-    </script>
 
 </body>
 
