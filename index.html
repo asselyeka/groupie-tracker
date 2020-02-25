@@ -20,10 +20,7 @@
         <div class="search" style="padding-block: 15px;" id="search">
 
             <form class="form-inline" action="/" method="POST">
-                <input type="text" name="name" placeholder="type title of band">
-                <input type="text" name="member" placeholder="type member's name">
-                <input type="text" name="location" placeholder="type location">
-                <input type="date" name="date" placeholder="type concert date">
+                <input type="text" name="search" placeholder="type to search">
                 <button type="submit" hidden="true"></button>
             </form>
 
@@ -31,12 +28,18 @@
         <div id="cards" class="row">
             {{range .}}
             <div class="col">
-                <div class="card h-100" style="width: 250px;">
+                <div class="card h-100" style="width: 350px;">
                     <img src={{.Image}} class="card-img-top" alt={{.Name}}>
                     <div class="card-body">
                         <h5 class="card-title">{{.Name}}</h5>
+                        <p>Members:</p>
+                        {{range .Members}}
+                        <ul>
+                            <li>{{.}}</li>
+                        </ul>
+                        {{end}}
                         <div>
-                            <a href="#" class="btn btn-primary">Concert Schedule</a>
+                            <a id="concert" href="#" onclick="msg()" class="btn btn-primary">Concert Schedule</a>         
                         </div>
                     </div>
                 </div>
@@ -46,6 +49,17 @@
 
     </section>
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+    function msg(){
+        swal("Write something here:", {
+  content: "input",
+})
+.then((value) => {
+  swal(`You typed: ${value}`);
+});
+    }
+    </script>
 </body>
 
 </html>

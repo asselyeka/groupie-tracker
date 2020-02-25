@@ -1,51 +1,28 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"errors"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strconv"
 	"strings"
+
+	grab "./data"
 )
 
-var art []Artists
-
-type Artists struct {
-	Id           int      `json:id`
-	Image        string   `json:image`
-	Name         string   `json:name`
-	Members      []string `json:members`
-	CreationDate int      `json:creationDate`
-	FirstAlbum   string   `json:firstAlbum`
-	Locations    string   `json:locations`
-	ConcertDates string   `json:concertDates`
-	Relations    string   `json:relations`
-}
-
-func ParseArtists(url string) {
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	}
-
-	defer response.Body.Close()
-
-	ourStr, err1 := ioutil.ReadAll(response.Body)
-	if err1 != nil {
-		panic(err1)
-	}
-
-	json.Unmarshal(ourStr, &art)
-}
-
 func mainPage(w http.ResponseWriter, r *http.Request) {
+	err1 := grab.GetArtistsData()
+	err2 := grab.GetLocationsData()
+	err3 := grab.GetDatesData()
+	if err1 != nil || err2 != nil || err3 != nil {
+		errors.New("Error by get data")
+	}
 
-	body := r.FormValue("name")
-	data := SearchArtist(body)
+	body := r.FormValue("search")
+	data := Search(body)
+	println("Body", body)
+	println(data)
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -57,25 +34,56 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-
 }
 
-func SearchArtist(name string) []Artists {
-	if name == "" {
+func ConverterStructToString() ([]string, error) {
+	var data []string
+	for i := 1; i <= len(grab.Artists); i++ {
+		artist, err1 := grab.GetArtistByID(i)
+		locations, err2 := grab.GetLocationByID(i)
+		date, err3 := grab.GetDateByID(i)
+		if err1 != nil || err2 != nil || err3 != nil {
+			return data, errors.New("Error by converter")
+		}
+
+		str := artist.Name + " "
+		for _, member := range artist.Members {
+			str += member + " "
+		}
+		str += strconv.Itoa(artist.CreationDate) + " "
+		str += artist.FirstAlbum + " "
+		for _, location := range locations.Locations {
+			str += location + " "
+		}
+		for _, d := range date.Dates {
+			str += d + " "
+		}
+		data = append(data, str)
+	}
+	println("Convert to str Done!")
+	return data, nil
+}
+
+func Search(search string) []grab.MyArtist {
+	if search == "" {
 		return nil
 	}
-	var search_artist []Artists
+	art, err := ConverterStructToString()
+	if err != nil {
+		errors.New("Error by converter")
+	}
+	var search_artist []grab.MyArtist
 
 	for i, artist := range art {
-		lower_band_name := strings.ToLower(artist.Name)
-		for i_name, l_name := range []byte(lower_band_name) {
-			lower_search_name := strings.ToLower(name)
-			if lower_search_name[0] == l_name {
+		lower_band := strings.ToLower(artist)
+		for i_name, l_name := range []byte(lower_band) {
+			lower_search := strings.ToLower(search)
+			if lower_search[0] == l_name {
 				lenght_name := 0
 				indx := i_name
-				for _, l := range []byte(lower_search_name) {
-					if l == lower_band_name[indx] {
-						if indx+1 == len(lower_band_name) {
+				for _, l := range []byte(lower_search) {
+					if l == lower_band[indx] {
+						if indx+1 == len(lower_band) {
 							break
 						}
 						indx++
@@ -84,26 +92,20 @@ func SearchArtist(name string) []Artists {
 						break
 					}
 				}
-				if len(name) == lenght_name {
-					search_artist = append(search_artist, art[i])
+				if len(search) == lenght_name {
+					band, _ := grab.GetArtistByID(i + 1)
+					search_artist = append(search_artist, band)
 					break
 				}
 			}
 		}
 
 	}
+	println("Search str Done!")
 	return search_artist
 }
 
 func main() {
-
-	// locations := "https://groupietrackers.herokuapp.com/api/locations"
-	// dates := "https://groupietrackers.herokuapp.com/api/dates"
-	// relation :=	"https://groupietrackers.herokuapp.com/api/relation" (
-
-	var artists = "https://groupietrackers.herokuapp.com/api/artists"
-
-	ParseArtists(artists)
 
 	// static folder
 	fs := http.FileServer(http.Dir("static"))
