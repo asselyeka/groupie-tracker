@@ -11,18 +11,32 @@ import (
 	grab "./data"
 )
 
+var data []grab.MyArtistFull
+
 func mainPage(w http.ResponseWriter, r *http.Request) {
-	err1 := grab.GetArtistsData()
-	err2 := grab.GetLocationsData()
-	err3 := grab.GetDatesData()
-	if err1 != nil || err2 != nil || err3 != nil {
+	err := grab.GetData()
+	if err != nil {
 		errors.New("Error by get data")
 	}
 
 	body := r.FormValue("search")
-	data := Search(body)
-	println("Body", body)
-	println(data)
+	data = Search(body)
+
+	tmpl, err := template.ParseFiles("index.html")
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+}
+
+func concertPage(w http.ResponseWriter, r *http.Request) {
+
+	concert := r.FormValue("search")
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -64,7 +78,7 @@ func ConverterStructToString() ([]string, error) {
 	return data, nil
 }
 
-func Search(search string) []grab.MyArtist {
+func Search(search string) []grab.MyArtistFull {
 	if search == "" {
 		return nil
 	}
@@ -72,7 +86,7 @@ func Search(search string) []grab.MyArtist {
 	if err != nil {
 		errors.New("Error by converter")
 	}
-	var search_artist []grab.MyArtist
+	var search_artist []grab.MyArtistFull
 
 	for i, artist := range art {
 		lower_band := strings.ToLower(artist)
@@ -93,7 +107,7 @@ func Search(search string) []grab.MyArtist {
 					}
 				}
 				if len(search) == lenght_name {
-					band, _ := grab.GetArtistByID(i + 1)
+					band, _ := grab.GetFullDataById(i + 1)
 					search_artist = append(search_artist, band)
 					break
 				}

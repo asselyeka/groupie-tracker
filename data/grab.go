@@ -21,6 +21,17 @@ type MyArtist struct {
 	Relations    string   `json:"relations"`
 }
 
+type MyArtistFull struct {
+	ID           int      `json:"id"`
+	Image        string   `json:"image"`
+	Name         string   `json:"name"`
+	Members      []string `json:"members"`
+	CreationDate int      `json:"creationDate"`
+	FirstAlbum   string   `json:"firstAlbum"`
+	Locations    []string `json:"locations"`
+	ConcertDates []string `json:"concertDates"`
+}
+
 type MyLocation struct {
 	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
@@ -48,6 +59,7 @@ type MyRelations struct {
 	Index []MyRelation `json:"index"`
 }
 
+var ArtistsFull []MyArtistFull
 var Artists []MyArtist
 var Dates MyDates
 var Locations MyLocations
@@ -107,6 +119,28 @@ func GetRelationsData() error {
 	return nil
 }
 
+func GetData() error {
+	err1 := GetArtistsData()
+	err2 := GetLocationsData()
+	err3 := GetDatesData()
+	if err1 != nil || err2 != nil || err3 != nil {
+		return errors.New("Error by get data artists, locations, dates")
+	}
+	for i := range Artists {
+		var tmpl MyArtistFull
+		tmpl.ID = i + 1
+		tmpl.Image = Artists[i].Image
+		tmpl.Name = Artists[i].Name
+		tmpl.Members = Artists[i].Members
+		tmpl.CreationDate = Artists[i].CreationDate
+		tmpl.FirstAlbum = Artists[i].FirstAlbum
+		tmpl.Locations = Locations.Index[i].Locations
+		tmpl.ConcertDates = Dates.Index[i].Dates
+		ArtistsFull = append(ArtistsFull, tmpl)
+	}
+	return nil
+}
+
 func GetArtistByID(id int) (MyArtist, error) {
 	for _, artist := range Artists {
 		if artist.ID == id {
@@ -141,6 +175,15 @@ func GetRelationByID(id int) (MyRelation, error) {
 		}
 	}
 	return MyRelation{}, errors.New("Not found")
+}
+
+func GetFullDataById(id int) (MyArtistFull, error) {
+	for _, artist := range ArtistsFull {
+		if artist.ID == id {
+			return artist, nil
+		}
+	}
+	return MyArtistFull{}, errors.New("Not found")
 }
 
 /*

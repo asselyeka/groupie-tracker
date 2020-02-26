@@ -27,9 +27,9 @@
         </div>
         <div id="cards" class="row">
             {{range .}}
-            <div class="col">
+            <div class="col" >
                 <div class="card h-100" style="width: 350px;">
-                    <img src={{.Image}} class="card-img-top" alt={{.Name}}>
+                    <img id="img" src={{.Image}} class="card-img-top" alt={{.Name}}>
                     <div class="card-body">
                         <h5 class="card-title">{{.Name}}</h5>
                         <p>Members:</p>
@@ -39,7 +39,11 @@
                         </ul>
                         {{end}}
                         <div>
-                            <a id="concert" href="#" onclick="msg()" class="btn btn-primary">Concert Schedule</a>         
+                            <a href="#" onclick="msg()" class="btn btn-primary">Concert Schedule</a>         
+                            <form class="form-inline" action="/" method="POST">
+                                <input type="text" name="concert">
+                                <button type="submit" hidden="true"></button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -51,14 +55,20 @@
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-    function msg(){
-        swal("Write something here:", {
-  content: "input",
-})
-.then((value) => {
-  swal(`You typed: ${value}`);
-});
-    }
+        function msg() {
+        var location = document.getElementById("location").innerText
+        var date = document.getElementById("date").innerText
+        var img = document.getElementById("date").innerHTML
+        
+        //console.log(location)
+
+        swal({
+            title: "Concert Schedule:",
+            text: `${location}`+"   -    "+`${date}`,
+            icon: img,
+            button: "Buy ticket!",
+        });
+        }
     </script>
 </body>
 

@@ -40,9 +40,25 @@
                         {{end}}
                         <div>
                             <a href="#concert"  class="btn btn-primary">Concert Schedule</a>
-                            <div id="concert" class="alert alert-primary" role="alert">
-            A simple primary alert—check it out!
-          </div>
+                            <div id="concert" hidden>
+                                <div>
+                                    <ul id="location">
+                                    {{range .Locations}}
+                                        <li >{{.}}</li>
+                                        {{end}}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <ul id="date">
+                                    {{range .ConcertDates}}
+                                        <li >{{.}}</li>
+                                        {{end}}
+                                    </ul>
+                                </div>
+                            
+    
+    
+                                </div>
                         </div>
                     </div>
                 </div>
