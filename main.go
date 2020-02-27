@@ -36,15 +36,17 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 
 func concertPage(w http.ResponseWriter, r *http.Request) {
 
-	concert := r.FormValue("search")
+	idStr := r.FormValue("concert")
+	id, _ := strconv.Atoi(idStr)
+	artist, _ := grab.GetFullDataById(id)
 
-	tmpl, err := template.ParseFiles("index.html")
+	tmpl, err := template.ParseFiles("concert.html")
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	if err := tmpl.Execute(w, artist); err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
@@ -80,7 +82,7 @@ func ConverterStructToString() ([]string, error) {
 
 func Search(search string) []grab.MyArtistFull {
 	if search == "" {
-		return nil
+		return grab.ArtistsFull
 	}
 	art, err := ConverterStructToString()
 	if err != nil {
@@ -126,6 +128,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", mainPage)
+	http.HandleFunc("/concert", concertPage)
 
 	port := ":8080"
 	println("Server listen on port:", port)

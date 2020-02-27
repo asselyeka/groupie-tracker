@@ -17,56 +17,36 @@
 
     <section>
 
-        <div class="search" style="padding-block: 15px;" id="search">
-
-            <form class="form-inline" action="/" method="POST">
-                <input type="text" name="search" placeholder="type to search">
-                <button type="submit" hidden="true"></button>
-            </form>
-
-        </div>
-        <div id="cards" class="row">
-            {{range .}}
-            <div class="col">
-                <div class="card h-100" style="width: 350px;">
-                    <img src={{.Image}} class="card-img-top" alt={{.Name}}>
-                    <div class="card-body">
-                        <h5 class="card-title">{{.Name}}</h5>
-                        <p>Members:</p>
-                        {{range .Members}}
-                        <ul>
-                            <li>{{.}}</li>
-                        </ul>
+        <div class="media">
+            <img class="mr-3" src={{.Image}} width="450" alt="Generic placeholder image">
+            <div class="media-body">
+                <h1>{{.Name}}</h1>
+                <p><b>Creation Date:</b> {{.CreationDate}} <b>First Album Released:</b> {{.FirstAlbum}}</p>
+                <p><b>Members:</b> {{range .Members}} {{.}}, {{end}}
+                </p>
+                <div>
+                    <ul id="location">
+                        {{range .Locations}}
+                        <li>{{.}}</li>
                         {{end}}
-                        <div>
-                            <a href="#concert"  class="btn btn-primary">Concert Schedule</a>
-                            <div id="concert" hidden>
-                                <div>
-                                    <ul id="location">
-                                    {{range .Locations}}
-                                        <li >{{.}}</li>
-                                        {{end}}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <ul id="date">
-                                    {{range .ConcertDates}}
-                                        <li >{{.}}</li>
-                                        {{end}}
-                                    </ul>
-                                </div>
-                            
-    
-    
-                                </div>
-                        </div>
-                    </div>
+                    </ul>
                 </div>
+                <div>
+                    <ul id="date">
+                        {{range .ConcertDates}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+
+
             </div>
-            {{end}}
         </div>
 
-        
+
+
+
+
 
     </section>
 

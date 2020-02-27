@@ -20,30 +20,47 @@
         <div class="search" style="padding-block: 15px;" id="search">
 
             <form class="form-inline" action="/" method="POST">
-                <input type="text" name="search" placeholder="type to search">
+                <input type="text" name="search" placeholder="type to search" list="character">
+                <datalist id="character">
+                    {{range .}}
+                    <option value={{.Name}}></option>
+                    {{range .Members}}
+                    <option value={{.}}></option>
+                    {{end}}
+                    {{range .Locations}}
+                    <option value={{.}}></option>
+                    {{end}}
+                    <option value={{.CreationDate}}></option>
+                    {{end}}
+                   </datalist>
                 <button type="submit" hidden="true"></button>
             </form>
 
         </div>
         <div id="cards" class="row">
             {{range .}}
-            <div class="col" >
-                <div class="card h-100" style="width: 350px;">
+            <div class="col">
+                <div class="card text-white bg-dark h-100" style="width: 250px;">
                     <img id="img" src={{.Image}} class="card-img-top" alt={{.Name}}>
+                    <div class="card-header" style="font-size: 30px;">{{.Name}}</div>
                     <div class="card-body">
-                        <h5 class="card-title">{{.Name}}</h5>
-                        <p>Members:</p>
+                        <h5 class="card-title">Members:</h5>
                         {{range .Members}}
-                        <ul>
-                            <li>{{.}}</li>
+                        <ul class="card-text">
+                            <li style="margin-bottom: 0rem;">{{.}}</li>
                         </ul>
                         {{end}}
-                        <div>
-                            <a href="#" onclick="msg()" class="btn btn-primary">Concert Schedule</a>         
-                            <form class="form-inline" action="/" method="POST">
-                                <input type="text" name="concert">
-                                <button type="submit" hidden="true"></button>
+                        <h5 class="card-title">Creation Date:</h5>
+                        <p class="card-text"> {{.CreationDate}}</p>
+                        <h5 class="card-title">First Album Released:</h5>
+                        <p class="card-text">{{.FirstAlbum}}</p>
+                        <div class="card-footer text-white bg-dark">
+                            <form class="form-inline" action="/concert" method="POST">
+                                <input type="hidden" name="concert" value={{.ID}}>
+                                <input type="submit" class="btn btn-light" value="Concert Schedule">
                             </form>
+
+
                         </div>
                     </div>
                 </div>
@@ -53,23 +70,6 @@
 
     </section>
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script>
-        function msg() {
-        var location = document.getElementById("location").innerText
-        var date = document.getElementById("date").innerText
-        var img = document.getElementById("date").innerHTML
-        
-        //console.log(location)
-
-        swal({
-            title: "Concert Schedule:",
-            text: `${location}`+"   -    "+`${date}`,
-            icon: img,
-            button: "Buy ticket!",
-        });
-        }
-    </script>
 </body>
 
 </html>
