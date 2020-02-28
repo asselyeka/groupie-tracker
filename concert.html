@@ -16,28 +16,32 @@
 <body>
 
     <section>
+        <div>
+            <form class="form-inline" action="/" method="POST">
+                <input type="submit" class="btn btn-light" value="Main Page">
+            </form>
+
+
+        </div>
 
         <div class="media">
-            <img class="mr-3" src={{.Image}} width="450" alt="Generic placeholder image">
-            <div class="media-body">
+            <img class="mr-3" src={{.Image}} width="450" alt={{.Name}}>
+            <div class="media-body artist">
                 <h1>{{.Name}}</h1>
                 <p><b>Creation Date:</b> {{.CreationDate}} <b>First Album Released:</b> {{.FirstAlbum}}</p>
                 <p><b>Members:</b> {{range .Members}} {{.}}, {{end}}
+                    <div class="conteiner">
+                        <div>
+                            {{range $key, $value := .DatesLocations}}
+                            <div class="artist-data">
+                                <b>{{$key}}</b>
+                            </div>
+                            {{range $value}}
+                            <div class="data">{{.}}</div>
+                            <br> {{end}} {{end}}
+                        </div>
+                    </div>
                 </p>
-                <div>
-                    <ul id="location">
-                        {{range .Locations}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
-                </div>
-                <div>
-                    <ul id="date">
-                        {{range .ConcertDates}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
-                </div>
 
 
             </div>

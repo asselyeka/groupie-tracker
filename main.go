@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -39,6 +40,13 @@ func concertPage(w http.ResponseWriter, r *http.Request) {
 	idStr := r.FormValue("concert")
 	id, _ := strconv.Atoi(idStr)
 	artist, _ := grab.GetFullDataById(id)
+
+	for key, value := range artist.DatesLocations {
+		fmt.Print(key + "  - ")
+		for _, e := range value {
+			println(e)
+		}
+	}
 
 	tmpl, err := template.ParseFiles("concert.html")
 	if err != nil {

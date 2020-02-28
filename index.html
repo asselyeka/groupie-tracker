@@ -17,20 +17,21 @@
 
     <section>
 
-        <div class="search" style="padding-block: 15px;" id="search">
+        <div class="search" id="search">
 
             <form class="form-inline" action="/" method="POST">
                 <input type="text" name="search" placeholder="type to search" list="character">
                 <datalist id="character">
                     {{range .}}
-                    <option value={{.Name}}></option>
+                    <option value={{.Name}}>{{.Name}} - artist/band</option>
                     {{range .Members}}
-                    <option value={{.}}></option>
+                    <option value="{{.}}">{{.}} - member</option>
                     {{end}}
                     {{range .Locations}}
-                    <option value={{.}}></option>
+                    <option value={{.}}>{{.}} - location</option>
                     {{end}}
-                    <option value={{.CreationDate}}></option>
+                    <option value={{.CreationDate}}>{{.CreationDate}} - Creation Date</option>
+                    <option value={{.FirstAlbum}}>{{.FirstAlbum}} - First Album Release Date</option>
                     {{end}}
                    </datalist>
                 <button type="submit" hidden="true"></button>

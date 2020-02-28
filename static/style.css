@@ -5,7 +5,30 @@ body {
     background-position: top center;
 }
 
-input {
+section>.search {
     height: 30px;
-    width: 170px;
+    width: 250px;
+    padding-block: 60px;
+}
+
+.media>img {
+    border-radius: 50%;
+}
+
+.media>.artist {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 18px;
+}
+
+.conteiner>div>.artist-data {
+    padding-left: 10px;
+    border-bottom: 2px solid turquoise;
+    width: 400px;
+    text-transform: uppercase;
+}
+
+div>.data {
+    padding-left: 200px;
+    font-size: 16px;
+    padding-bottom: 0mm;
 }
