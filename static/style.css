@@ -1,34 +1,65 @@
-body {
-    padding: 20px;
-    background-image: url("img/1.jpg");
-    background-repeat: no-repeat;
-    background-position: top center;
-}
-
-section>.search {
-    height: 30px;
-    width: 250px;
-    padding-block: 60px;
-}
-
-.media>img {
-    border-radius: 50%;
-}
-
-.media>.artist {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 18px;
-}
-
-.conteiner>div>.artist-data {
-    padding-left: 10px;
-    border-bottom: 2px solid turquoise;
-    width: 400px;
-    text-transform: uppercase;
-}
-
-div>.data {
-    padding-left: 200px;
-    font-size: 16px;
-    padding-bottom: 0mm;
-}
+                            body {
+                                padding: 20px;
+                                background-image: url("img/1.jpg");
+                                background-repeat: repeat;
+                                background-position: top center;
+                            }
+                            
+                            section>.search {
+                                height: 30px;
+                                width: 250px;
+                                padding-block: 60px;
+                            }
+                            
+                            .media>img {
+                                border-radius: 50%;
+                            }
+                            
+                            .media>.artist {
+                                font-family: Georgia, 'Times New Roman', Times, serif;
+                                font-size: 18px;
+                            }
+                            
+                            .conteiner>div>.artist-data {
+                                padding-left: 10px;
+                                border-bottom: 2px solid turquoise;
+                                width: 400px;
+                                text-transform: uppercase;
+                            }
+                            
+                            div>.data {
+                                padding-left: 200px;
+                                font-size: 16px;
+                                padding-bottom: 0mm;
+                            }
+                            
+                            .filter {
+                                display: flex;
+                            }
+                            
+                            .filter-item {
+                                margin: 0;
+                                padding: 0;
+                            }
+                            
+                            .filter-item-start {
+                                margin-left: 98px;
+                                padding: 0;
+                            }
+                            
+                            .filter-number {
+                                background-color: gray;
+                                border-radius: 40%;
+                                width: 100px;
+                                height: 25px;
+                                color: honeydew;
+                                text-align: center;
+                                margin-left: 5px;
+                            }
+                            
+                            .filter-title {
+                                margin-left: 5px;
+                                color: aquamarine;
+                                font-size: 16px;
+                                text-shadow: 1px 1px 1px black;
+                            }

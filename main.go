@@ -20,8 +20,22 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 		errors.New("Error by get data")
 	}
 
-	body := r.FormValue("search")
-	data = Search(body)
+	search := r.FormValue("search")
+	filterByCreationFrom := r.FormValue("startCD")
+	filterByCreationTill := r.FormValue("endCD")
+	println("filterByCreationFrom:", filterByCreationFrom)
+	println("filterByCreationTill:", filterByCreationTill)
+
+	filterByFA := r.FormValue("startFA")
+	filterByFAend := r.FormValue("endFA")
+	println("filterFA:", filterByFA)
+	println("filterFAend:", filterByFAend)
+
+	if !(search == "" && len(data) != 0) {
+		data = Search(search)
+	}
+
+	data = FilterByCreation(data, filterByCreationFrom, filterByCreationTill)
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -126,6 +140,26 @@ func Search(search string) []grab.MyArtistFull {
 
 	}
 	println("Search str Done!")
+	return search_artist
+}
+
+func FilterByCreation(data []grab.MyArtistFull, from string, till string) []grab.MyArtistFull {
+	if from == "" || till == "" {
+		return data
+	}
+	fromInt, err1 := strconv.Atoi(from)
+	tillInt, err2 := strconv.Atoi(till)
+	if err1 != nil || err2 != nil {
+		errors.New("Error by filter by creation date data")
+	}
+
+	var search_artist []grab.MyArtistFull
+
+	for _, artist := range data {
+		if artist.CreationDate >= fromInt && artist.CreationDate <= tillInt {
+			search_artist = append(search_artist, artist)
+		}
+	}
 	return search_artist
 }
 

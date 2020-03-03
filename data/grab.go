@@ -121,6 +121,9 @@ func GetRelationsData() error {
 }
 
 func GetData() error {
+	if len(ArtistsFull) != 0 {
+		return nil
+	}
 	err1 := GetArtistsData()
 	err2 := GetLocationsData()
 	err3 := GetDatesData()

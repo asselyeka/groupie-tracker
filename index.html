@@ -15,13 +15,15 @@
 
 <body>
 
-    <section>
+    <section id="navigation">
         <div>
             <form class="form-inline" action="/" method="POST">
-                <input type="submit" class="btn btn-light" value="Main Page">
+                <input type="submit" class="filter-title" class="btn btn-light" value="Main Page">
             </form>
         </div>
+    </section>
 
+    <section id="search-bar">
         <div class="search" id="search">
             <form class="form-inline" action="/" method="POST">
                 <input type="text" name="search" placeholder="type to search" list="character">
@@ -37,41 +39,89 @@
                     <option value={{.CreationDate}}>{{.CreationDate}} - Creation Date</option>
                     <option value={{.FirstAlbum}}>{{.FirstAlbum}} - First Album Release Date</option>
                     {{end}}
-                   </datalist>
+                </datalist>
                 <button type="submit" hidden="true"></button>
             </form>
-
         </div>
-        <div id="cards" class="row">
-            {{range .}}
-            <div class="col">
-                <div class="card text-white bg-dark h-100" style="width: 250px;">
-                    <img id="img" src={{.Image}} class="card-img-top" alt={{.Name}}>
-                    <div class="card-header" style="font-size: 30px;">{{.Name}}</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Members:</h5>
-                        {{range .Members}}
-                        <ul class="card-text">
-                            <li style="margin-bottom: 0rem;">{{.}}</li>
-                        </ul>
-                        {{end}}
-                        <h5 class="card-title">Creation Date:</h5>
-                        <p class="card-text"> {{.CreationDate}}</p>
-                        <h5 class="card-title">First Album Released:</h5>
-                        <p class="card-text">{{.FirstAlbum}}</p>
-                        <div class="card-footer text-white bg-dark">
-                            <form class="form-inline" action="/concert" method="POST">
-                                <input type="hidden" name="concert" value={{.ID}}>
-                                <input type="submit" class="btn btn-light" value="Concert Schedule">
-                            </form>
+    </section>
+
+    <section id="filters">
+
+        <form action="/" method="POST">
+            <div class="filter">
+                <label class="filter-title" for="startCD">Filter by creation date</label>
+                <input type="range" class="filter-item-start" min="1900" max="2020" step="1" id="startCD" name="startCD" value="1900">
+                <input type="range" class="filter-item-start" min="1900" max="2020" step="1" id="endCD" name="endCD" value="2020">
+                <label class="filter-title" for="from-date" top>From: </label><br/>
+                <div name="from-date" class="filter-item filter-number" id="from-date" maxlength="4"></div>
+                <label class="filter-title" for="till-date" top>Till: </label><br/>
+                <div name="till-date" class="filter-item filter-number" id="till-date" maxlength="4"></div>
+            </div>
+            <br>
+            <div class="filter">
+                <label class="filter-title" for="startFA">Filter by first album date</label>
+                <input type="date" class="filter-item-start" id="startFA" name="startFA">
+                <label for="endFA" class="filter-title" for="till-date" top>Till: </label><br/>
+                <input type="date" class="filter-item-start" id="endFA" name="endFA">
+            </div>
+
+            <button type="submit" class="filter-title">Filter</button>
+        </form>
 
 
-                        </div>
+        <script>
+            document.getElementById('from-date').style.visibility = 'hidden';
+            document.getElementById('till-date').style.visibility = 'hidden';
+            document.getElementById('startCD').addEventListener('input', function functionName(e) {
+                document.getElementById('from-date').style.visibility = 'visible';
+                let start = e.target.value;
+                console.log(start);
+                document.getElementById('from-date').innerHTML = start;
+
+            });
+
+            document.getElementById('endCD').addEventListener('input', function functionName(e) {
+                document.getElementById('till-date').style.visibility = 'visible';
+                let end = e.target.value;
+                console.log(end);
+                document.getElementById('till-date').innerHTML = end;
+
+            });
+        </script>
+
+    </section>
+
+
+    <div id="cards" class="row">
+        {{range .}}
+        <div class="col">
+            <div class="card text-white bg-dark h-100" style="width: 250px;">
+                <img id="img" src={{.Image}} class="card-img-top" alt={{.Name}}>
+                <div class="card-header" style="font-size: 30px;">{{.Name}}</div>
+                <div class="card-body">
+                    <h5 class="card-title">Members:</h5>
+                    {{range .Members}}
+                    <ul class="card-text">
+                        <li style="margin-bottom: 0rem;">{{.}}</li>
+                    </ul>
+                    {{end}}
+                    <h5 class="card-title">Creation Date:</h5>
+                    <p class="card-text"> {{.CreationDate}}</p>
+                    <h5 class="card-title">First Album Released:</h5>
+                    <p class="card-text">{{.FirstAlbum}}</p>
+                    <div class="card-footer text-white bg-dark">
+                        <form class="form-inline" action="/concert" method="POST">
+                            <input type="hidden" name="concert" value={{.ID}}>
+                            <input type="submit" class="btn btn-light" value="Concert Schedule">
+                        </form>
+
+
                     </div>
                 </div>
             </div>
-            {{end}}
         </div>
+        {{end}}
+    </div>
 
     </section>
 
