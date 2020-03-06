@@ -35,15 +35,14 @@
                             
                             .filter {
                                 display: flex;
+                                color: aquamarine;
+                                font-size: 16px;
+                                text-shadow: 1px 1px 1px black;
                             }
                             
                             .filter-item {
                                 margin: 0;
-                                padding: 0;
-                            }
-                            
-                            .filter-item-start {
-                                margin-left: 98px;
+                                margin-left: 20px;
                                 padding: 0;
                             }
                             
@@ -59,7 +58,20 @@
                             
                             .filter-title {
                                 margin-left: 5px;
+                                width: 210px;
+                            }
+                            
+                            .filter-submit {
+                                margin-bottom: 15px;
                                 color: aquamarine;
                                 font-size: 16px;
                                 text-shadow: 1px 1px 1px black;
+                            }
+                            
+                            #start {
+                                position: relative;
+                            }
+                            
+                            #endCD {
+                                position: relative;
                             }

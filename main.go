@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	grab "./data"
 )
@@ -20,27 +21,97 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 		errors.New("Error by get data")
 	}
 
+	main := r.FormValue("main")
 	search := r.FormValue("search")
 	filterByCreationFrom := r.FormValue("startCD")
 	filterByCreationTill := r.FormValue("endCD")
-	println("filterByCreationFrom:", filterByCreationFrom)
-	println("filterByCreationTill:", filterByCreationTill)
+	location := r.FormValue("location-filter")
+	var mem1, mem2, mem3, mem4, mem5, mem6, mem7, mem8 int
+	mem1, err1 := strconv.Atoi(r.FormValue("mem1"))
+	if err1 != nil {
+		mem1 = 0
+	}
+	mem2, err2 := strconv.Atoi(r.FormValue("mem2"))
+	if err2 != nil {
+		mem2 = 0
+	}
+	mem3, err3 := strconv.Atoi(r.FormValue("mem3"))
+	if err3 != nil {
+		mem3 = 0
+	}
+	mem4, err4 := strconv.Atoi(r.FormValue("mem4"))
+	if err4 != nil {
+		mem4 = 0
+	}
+	mem5, err5 := strconv.Atoi(r.FormValue("mem5"))
+	if err5 != nil {
+		mem5 = 0
+	}
+	mem6, err6 := strconv.Atoi(r.FormValue("mem6"))
+	if err6 != nil {
+		mem6 = 0
+	}
+	mem7, err7 := strconv.Atoi(r.FormValue("mem7"))
+	if err7 != nil {
+		mem7 = 0
+	}
+	mem8, err8 := strconv.Atoi(r.FormValue("mem8"))
+	if err8 != nil {
+		mem8 = 0
+	}
+	mem := []int{mem1, mem2, mem3, mem4, mem5, mem6, mem7, mem8}
+	sum := 0
+	for _, n := range mem {
+		sum += n
+	}
+	println("startCD:", filterByCreationFrom)
+	fmt.Println("mem:", mem)
 
 	filterByFA := r.FormValue("startFA")
 	filterByFAend := r.FormValue("endFA")
-	println("filterFA:", filterByFA)
-	println("filterFAend:", filterByFAend)
+	fmt.Println("filterFA:", filterByFA)
+	fmt.Println("filterFAend:", filterByFAend)
 
 	if !(search == "" && len(data) != 0) {
 		data = Search(search)
 	}
 
-	data = FilterByCreation(data, filterByCreationFrom, filterByCreationTill)
+	if filterByCreationFrom != "" || filterByCreationTill != "" {
+		if filterByCreationFrom == "" {
+			filterByCreationFrom = "1900"
+		}
+		if filterByCreationTill == "" {
+			filterByCreationTill = "2020"
+		}
+		data = FilterByCreation(data, filterByCreationFrom, filterByCreationTill)
+	}
+
+	if filterByFA != "" || filterByFAend != "" {
+		if filterByFA == "" {
+			filterByFA = "1900-01-01"
+		}
+		if filterByFAend == "" {
+			filterByFAend = "2020-03-03"
+		}
+		data = FilterByAlbumDate(data, filterByFA, filterByFAend)
+	}
+
+	if sum != 0 {
+		data = FilterByMember(data, mem)
+	}
+
+	if location != "" {
+		data = FilterByLocation(data, location)
+	}
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
+	}
+
+	if main == "Main Page" {
+		data = Search("a")
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
@@ -161,6 +232,55 @@ func FilterByCreation(data []grab.MyArtistFull, from string, till string) []grab
 		}
 	}
 	return search_artist
+}
+
+func FilterByMember(data []grab.MyArtistFull, mem []int) []grab.MyArtistFull {
+	var tmp []grab.MyArtistFull
+	for _, bandmem := range data {
+		for _, num := range mem {
+			if len(bandmem.Members) == num {
+				tmp = append(tmp, bandmem)
+			}
+
+		}
+	}
+	return tmp
+}
+
+func FilterByAlbumDate(data []grab.MyArtistFull, albumStart string, albumEnd string) []grab.MyArtistFull {
+	layOut := "2006-01-02"
+
+	dateStart, err1 := time.Parse(layOut, albumStart)
+	dateEnd, err2 := time.Parse(layOut, albumEnd)
+	if err1 != nil || err2 != nil {
+		errors.New("Error by First Album date convert for filter")
+	}
+	var tmp []grab.MyArtistFull
+
+	layOutData := "02-01-2006"
+	for _, band := range data {
+		date, err := time.Parse(layOutData, band.FirstAlbum)
+		if err != nil {
+			errors.New("Error by First Album date convert for filter")
+		}
+		if dateStart.Before(date) && dateEnd.After(date) {
+			tmp = append(tmp, band)
+		}
+	}
+	return tmp
+}
+
+func FilterByLocation(data []grab.MyArtistFull, location string) []grab.MyArtistFull {
+	var tmp []grab.MyArtistFull
+
+	for _, band := range data {
+		for _, loc := range band.Locations {
+			if location == loc {
+				tmp = append(tmp, band)
+			}
+		}
+	}
+	return tmp
 }
 
 func main() {

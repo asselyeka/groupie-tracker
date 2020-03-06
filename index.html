@@ -18,7 +18,7 @@
     <section id="navigation">
         <div>
             <form class="form-inline" action="/" method="POST">
-                <input type="submit" class="filter-title" class="btn btn-light" value="Main Page">
+                <input type="submit" name="main" class="filter-title btn btn-light" value="Main Page">
             </form>
         </div>
     </section>
@@ -45,27 +45,64 @@
         </div>
     </section>
 
-    <section id="filters">
+    <section id="filter">
 
         <form action="/" method="POST">
             <div class="filter">
                 <label class="filter-title" for="startCD">Filter by creation date</label>
-                <input type="range" class="filter-item-start" min="1900" max="2020" step="1" id="startCD" name="startCD" value="1900">
-                <input type="range" class="filter-item-start" min="1900" max="2020" step="1" id="endCD" name="endCD" value="2020">
-                <label class="filter-title" for="from-date" top>From: </label><br/>
+                <div id=start>
+                    <input type="range" min="1900" max="2020" step="1" id="startCD" name="startCD" value="1900">
+                    <input type="range" min="1900" max="2020" step="1" id="endCD" name="endCD" value="2020">
+                </div>
+                <label class="filter-item-start" for="from-date" top>From: </label><br/>
                 <div name="from-date" class="filter-item filter-number" id="from-date" maxlength="4"></div>
-                <label class="filter-title" for="till-date" top>Till: </label><br/>
+                <label class="filter-item-start" for="till-date" top>Till: </label><br/>
                 <div name="till-date" class="filter-item filter-number" id="till-date" maxlength="4"></div>
             </div>
             <br>
             <div class="filter">
-                <label class="filter-title" for="startFA">Filter by first album date</label>
-                <input type="date" class="filter-item-start" id="startFA" name="startFA">
-                <label for="endFA" class="filter-title" for="till-date" top>Till: </label><br/>
-                <input type="date" class="filter-item-start" id="endFA" name="endFA">
+                <lable class="filter-title">Filter by first album date</lable>
+                <label class="filter-item" for="startFA">From:</label>
+                <input type="date" class="filter-item" id="startFA" name="startFA">
+                <label for="endFA" class="filter-item" for="till-date" top>Till: </label><br/>
+                <input type="date" class="filter-item" id="endFA" name="endFA">
+            </div>
+            <br>
+            <div class="filter">
+                <lable class="filter-title">Filter by number of members</lable>
+                <input type="checkbox" class="filter-item" id="1" name="mem1" value="1">
+                <label for="1"> 1 </label>
+                <input type="checkbox" class="filter-item" id="2" name="mem2" value="2">
+                <label for="2"> 2 </label>
+                <input type="checkbox" class="filter-item" id="3" name="mem3" value="3">
+                <label for="3"> 3 </label>
+                <input type="checkbox" class="filter-item" id="4" name="mem4" value="4">
+                <label for="4"> 4 </label>
+                <input type="checkbox" class="filter-item" id="5" name="mem5" value="5">
+                <label for="5"> 5 </label>
+                <input type="checkbox" class="filter-item" id="6" name="mem6" value="6">
+                <label for="6"> 6 </label>
+                <input type="checkbox" class="filter-item" id="7" name="mem7" value="7">
+                <label for="7"> 7 </label>
+                <input type="checkbox" class="filter-item" id="8" name="mem8" value="8">
+                <label for="8"> 8 </label>
+            </div>
+            <br>
+            <div class="filter">
+                <label class="filter-title" for="location-filter">Filter by locations of concerts</label>
+                <input type="text" class="filter-item" id="location-filter" name="location-filter" placeholder="Location" list="location-name">
+                <datalist style="text-transform: uppercase;" id="location-name">
+                    {{range .}}
+                    {{range .Locations}}
+                    <option value={{.}}>{{.}} - location</option>
+                    {{end}}
+                    {{end}}
+                </datalist>
             </div>
 
-            <button type="submit" class="filter-title">Filter</button>
+            <br>
+            <button type="submit" class="filter-submit">Filter</button>
+            <br>
         </form>
 
 
